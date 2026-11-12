@@ -1,0 +1,74 @@
+/* ==========================================================
+   base.css — variables, reset y tipografía
+   ========================================================== */
+:root {
+  /* Paleta principal */
+  --bg: #0a0a14;
+  --bg-2: #12122a;
+  --magenta: #ff2bd6;
+  --cian: #00f0ff;
+  --amarillo: #f5ff3d;
+  --violeta: #7a2bff;
+  --violeta-claro: #a672ff;
+  --verde: #39ff88;
+  --rojo: #ff3b5c;
+
+  /* Texto y superficies */
+  --texto: #e9e9ff;
+  --suave: #a3a8d6;
+  --panel: rgba(16, 16, 38, 0.9);
+  --panel-2: rgba(28, 28, 60, 0.9);
+  --borde: rgba(255, 255, 255, 0.14);
+
+  /* Acento dinámico (cada pantalla/mundo lo redefine) */
+  --acento: var(--cian);
+
+  /* Tipografías: solo fuentes del sistema (funciona offline) */
+  --fuente-ui: 'Trebuchet MS', 'Segoe UI', Roboto, Arial, sans-serif;
+  --fuente-mono: 'Courier New', Consolas, 'Lucida Console', monospace;
+
+  --radio: 16px;
+  --ancho-max: 720px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: var(--fuente-ui);
+  font-size: 16px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { line-height: 1.15; letter-spacing: 0.02em; }
+
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: not-allowed; }
+
+/* Foco visible para navegación con teclado */
+:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 2px; }
+
+#app { position: relative; z-index: 2; min-height: 100vh; outline: none; }
+
+/* Solo para lectores de pantalla */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* Respeta la preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

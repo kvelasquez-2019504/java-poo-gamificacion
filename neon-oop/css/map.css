@@ -1,0 +1,85 @@
+/* ==========================================================
+   map.css — mapa de niveles estilo Candy Crush
+   El mapa usa un sistema de coordenadas proporcional (viewBox 400 x ALTO)
+   para que nodos, línea y banners escalen juntos en cualquier ancho.
+   ========================================================== */
+.pantalla-mapa { min-height: 100vh; padding-bottom: 3rem; }
+
+.mapa-scroll { width: min(100%, 480px); margin: 0 auto; padding: 0.5rem 0.5rem 0; }
+
+.mapa { position: relative; width: 100%; /* aspect-ratio se fija por JS */ }
+
+/* Fondos temáticos por mundo */
+.mapa-mundo {
+  position: absolute; left: 0; width: 100%; border-radius: 22px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--acento) 45%, transparent);
+  background:
+    radial-gradient(ellipse at 20% 15%, color-mix(in srgb, var(--acento) 26%, transparent), transparent 60%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--acento) 8%, transparent) 0 2px, transparent 2px 26px),
+    rgba(10, 10, 24, 0.55);
+}
+.mapa-mundo.m-abstraccion   { background-image: radial-gradient(ellipse at 20% 15%, color-mix(in srgb, var(--acento) 26%, transparent), transparent 60%), repeating-linear-gradient(90deg, color-mix(in srgb, var(--acento) 9%, transparent) 0 2px, transparent 2px 30px); }
+.mapa-mundo.m-encapsulamiento { background-image: radial-gradient(circle at 80% 30%, color-mix(in srgb, var(--acento) 26%, transparent), transparent 55%), repeating-linear-gradient(45deg, color-mix(in srgb, var(--acento) 9%, transparent) 0 2px, transparent 2px 22px); }
+.mapa-mundo.m-herencia      { background-image: radial-gradient(circle at 25% 70%, color-mix(in srgb, var(--acento) 22%, transparent), transparent 55%), repeating-linear-gradient(-45deg, color-mix(in srgb, var(--acento) 9%, transparent) 0 2px, transparent 2px 24px); }
+.mapa-mundo.m-polimorfismo  { background-image: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--acento) 30%, transparent), transparent 60%), repeating-radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--acento) 10%, transparent) 0 2px, transparent 2px 28px); }
+
+/* Banner del mundo */
+.mapa-banner {
+  position: absolute; left: 4%; width: 92%; padding: 0.55rem 0.8rem; text-align: center;
+  background: rgba(8, 8, 20, 0.92); border: 2px solid var(--acento); border-radius: 16px;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--acento) 55%, transparent); z-index: 3;
+}
+.mapa-banner h2 { font-size: 1.05rem; letter-spacing: 0.12em; }
+.mapa-banner h3 { font-size: 0.8rem; color: var(--suave); font-weight: 600; margin: 0.1rem 0; }
+.mapa-banner p { font-size: 0.72rem; color: var(--suave); line-height: 1.3; }
+
+/* Línea de neón (SVG) */
+.mapa-linea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: visible; }
+.mapa-linea path { fill: none; stroke-width: 7; stroke-linecap: round; stroke: rgba(255, 255, 255, 0.12); }
+.mapa-linea path.activo { stroke: var(--acento); filter: drop-shadow(0 0 5px var(--acento)); stroke-dasharray: 2 14; animation: fluir 1.2s linear infinite; }
+@keyframes fluir { to { stroke-dashoffset: -16; } }
+
+/* Nodos */
+.nodo {
+  position: absolute; width: 17%; aspect-ratio: 1; transform: translate(-50%, -50%); z-index: 4;
+  border-radius: 50%; border: 3px solid var(--acento);
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--acento) 55%, #fff 10%), color-mix(in srgb, var(--acento) 30%, #0a0a14));
+  color: #fff; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 6px #000;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--acento) 45%, #000), 0 0 16px color-mix(in srgb, var(--acento) 60%, transparent);
+  transition: transform 0.12s;
+}
+.nodo:hover:not(.bloqueado) { transform: translate(-50%, -50%) scale(1.1); }
+.nodo:active:not(.bloqueado) { transform: translate(-50%, -46%) scale(0.97); }
+.nodo.jefe { width: 24%; border-width: 4px; font-size: 1.7rem; }
+.nodo.bloqueado { filter: grayscale(1) brightness(0.55); border-color: #555; box-shadow: 0 4px 0 #222; cursor: not-allowed; }
+.nodo.disponible { animation: pulso-nodo 1.4s ease-in-out infinite; }
+@keyframes pulso-nodo {
+  0%, 100% { box-shadow: 0 6px 0 color-mix(in srgb, var(--acento) 45%, #000), 0 0 14px color-mix(in srgb, var(--acento) 60%, transparent); }
+  50%      { box-shadow: 0 6px 0 color-mix(in srgb, var(--acento) 45%, #000), 0 0 34px 8px color-mix(in srgb, var(--acento) 80%, transparent); }
+}
+.nodo.completado { background: radial-gradient(circle at 35% 30%, #fff8, var(--acento) 45%, color-mix(in srgb, var(--acento) 40%, #000)); }
+.nodo .nodo-estrellas {
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px;
+  font-size: 0.95rem; white-space: nowrap; filter: drop-shadow(0 0 4px #000);
+}
+.nodo.jefe::before {
+  content: 'JEFE'; position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--rojo); text-shadow: 0 0 8px var(--rojo);
+}
+
+/* Avatar del jugador sobre el nodo actual */
+.nodo-avatar {
+  position: absolute; left: 50%; bottom: 82%; transform: translateX(-50%); z-index: 5;
+  animation: flotar 1.6s ease-in-out infinite; pointer-events: none;
+}
+.nodo-avatar .avatar { width: 44px; height: 44px; border-color: var(--amarillo); box-shadow: 0 0 14px var(--amarillo); }
+.nodo-avatar::after {
+  content: ''; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%);
+  border: 7px solid transparent; border-top-color: var(--amarillo);
+}
+@keyframes flotar { 50% { transform: translateX(-50%) translateY(-7px); } }
+
+/* Vista previa del nivel (modal) */
+.nivel-previa .meta { color: var(--suave); font-size: 0.85rem; }
+.nivel-previa .historia-prev { font-style: italic; color: var(--cian); }

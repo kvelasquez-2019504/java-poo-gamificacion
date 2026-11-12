@@ -1,0 +1,172 @@
+/* ==========================================================
+   components.css — botones, tarjetas, modales, HUD, avatares
+   ========================================================== */
+
+/* ---------- Botones estilo "caramelo" ---------- */
+.btn {
+  --c: var(--cian);
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 48px; padding: 0.7rem 1.5rem;
+  border: 2px solid var(--c); border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 35%, #0a0a14), color-mix(in srgb, var(--c) 12%, #0a0a14));
+  color: #fff; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  text-shadow: 0 0 8px var(--c);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--c) 55%, #000), 0 0 18px color-mix(in srgb, var(--c) 45%, transparent);
+  transition: transform 0.08s, box-shadow 0.08s, filter 0.2s;
+}
+.btn:hover:not(:disabled) { filter: brightness(1.2); }
+.btn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--c) 55%, #000), 0 0 10px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.btn:disabled { filter: grayscale(0.9) brightness(0.55); box-shadow: 0 4px 0 #222; text-shadow: none; }
+.btn-primario  { --c: var(--magenta); }
+.btn-secundario{ --c: var(--cian); }
+.btn-peligro   { --c: var(--rojo); }
+.btn-exito     { --c: var(--verde); }
+.btn-grande { min-height: 56px; font-size: 1.1rem; padding: 0.8rem 2rem; }
+.btn-mini {
+  min-height: 40px; padding: 0.35rem 0.9rem; font-size: 0.85rem; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 55%, #000);
+}
+.btn-icono { min-width: 44px; min-height: 44px; padding: 0.3rem; font-size: 1.25rem; }
+
+/* ---------- Tarjetas y paneles ---------- */
+.tarjeta {
+  background: var(--panel); border: 1px solid var(--borde); border-radius: var(--radio);
+  padding: 1.1rem; box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+}
+
+/* ---------- Campos de formulario ---------- */
+.campo { display: grid; gap: 0.4rem; }
+.campo label { font-weight: 700; color: var(--cian); letter-spacing: 0.05em; font-size: 0.85rem; text-transform: uppercase; }
+.input {
+  width: 100%; min-height: 50px; padding: 0.6rem 1rem; border-radius: 12px;
+  background: #0d0d22; border: 2px solid var(--violeta); color: var(--texto);
+  font-family: var(--fuente-mono); font-size: 1.1rem;
+}
+.input:focus { border-color: var(--cian); box-shadow: 0 0 14px rgba(0, 240, 255, 0.5); outline: none; }
+.error-campo { min-height: 1.4em; color: var(--rojo); font-size: 0.9rem; }
+
+/* ---------- Avatares ---------- */
+.avatar {
+  display: inline-block; width: 48px; height: 48px; border-radius: 50%;
+  border: 2px solid var(--acento); overflow: hidden; background: #0d0d22;
+  box-shadow: 0 0 12px var(--acento); flex: none;
+}
+.avatar img, .avatar svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-grande { width: 76px; height: 76px; }
+
+/* ---------- HUD superior ---------- */
+.hud {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+  padding: 0.5rem 0.75rem; background: rgba(8, 8, 20, 0.92);
+  border-bottom: 2px solid var(--magenta); box-shadow: 0 4px 22px rgba(255, 43, 214, 0.35);
+  backdrop-filter: blur(6px);
+}
+.hud-jugador { display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 1 1 140px; }
+.hud-jugador .avatar { width: 40px; height: 40px; }
+.hud-nombre { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hud-datos { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+.vidas { display: inline-flex; gap: 0.15rem; font-size: 1.4rem; line-height: 1; }
+.corazon { display: inline-block; color: var(--magenta); text-shadow: 0 0 10px var(--magenta); transition: filter 0.3s; }
+.corazon.vacio { color: #3a2a45; text-shadow: none; filter: grayscale(1); }
+.corazon.roto { animation: romper 0.7s ease forwards; }
+.corazon.nuevo { animation: latido 0.6s ease 2; }
+@keyframes romper {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.4) rotate(-12deg); }
+  50%  { transform: scale(0.9) rotate(14deg); filter: blur(1px); }
+  100% { transform: scale(1) rotate(0); color: #3a2a45; text-shadow: none; filter: grayscale(1); }
+}
+.temporizador-vida { font-family: var(--fuente-mono); color: var(--amarillo); font-size: 0.85rem; min-width: 3.4em; }
+.puntos-total { font-family: var(--fuente-mono); color: var(--amarillo); font-weight: 700; text-shadow: 0 0 8px rgba(245, 255, 61, 0.6); }
+
+/* ---------- Estrellas ---------- */
+.estrellas { display: inline-flex; gap: 0.1rem; letter-spacing: 0; }
+.estrella { color: #3b3b5c; transition: color 0.3s; }
+.estrella.on { color: var(--amarillo); text-shadow: 0 0 8px var(--amarillo); }
+
+/* ---------- Modales ---------- */
+#modales { position: relative; z-index: 100; }
+.modal-fondo {
+  position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem;
+  background: rgba(3, 3, 10, 0.8); backdrop-filter: blur(4px); animation: aparecer 0.2s ease;
+}
+.modal {
+  width: min(100%, 460px); max-height: 92vh; overflow: auto;
+  background: var(--panel-2); border: 2px solid var(--acento); border-radius: 20px;
+  padding: 1.3rem; box-shadow: 0 0 36px color-mix(in srgb, var(--acento) 55%, transparent);
+  animation: emerger 0.3s cubic-bezier(.2, 1.4, .4, 1);
+}
+.modal h2 { margin-bottom: 0.7rem; }
+.modal-cuerpo { display: grid; gap: 0.7rem; color: var(--texto); }
+.modal-acciones { display: flex; gap: 0.7rem; flex-wrap: wrap; justify-content: flex-end; margin-top: 1.1rem; }
+@keyframes aparecer { from { opacity: 0; } }
+@keyframes emerger { from { opacity: 0; transform: scale(0.8) translateY(20px); } }
+
+/* ---------- Avisos (toasts) ---------- */
+#toasts {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 110;
+  display: grid; gap: 0.5rem; width: min(92vw, 420px); pointer-events: none;
+}
+.toast {
+  padding: 0.7rem 1rem; border-radius: 12px; background: #11112b; border: 1px solid var(--cian);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.4); text-align: center; font-weight: 700;
+  animation: subir 0.3s ease, desvanecer 0.4s ease 2.6s forwards;
+}
+.toast.error { border-color: var(--rojo); box-shadow: 0 0 16px rgba(255, 59, 92, 0.5); }
+.toast.ok { border-color: var(--verde); box-shadow: 0 0 16px rgba(57, 255, 136, 0.45); }
+@keyframes subir { from { opacity: 0; transform: translateY(20px); } }
+@keyframes desvanecer { to { opacity: 0; transform: translateY(-10px); } }
+
+/* ---------- Confeti de partículas neón ---------- */
+.confeti-capa { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+.confeti {
+  position: absolute; top: -12px; width: 10px; height: 16px; border-radius: 2px;
+  animation: caer var(--dur, 2.6s) cubic-bezier(.3, .6, .5, 1) forwards;
+  box-shadow: 0 0 8px currentColor;
+}
+@keyframes caer {
+  to { transform: translate3d(var(--dx, 0), 105vh, 0) rotate(var(--giro, 720deg)); opacity: 0.9; }
+}
+
+/* ---------- Ajustes ---------- */
+.lista-ajustes { display: grid; gap: 0.6rem; }
+.lista-ajustes .btn { width: 100%; }
+
+/* ---------- Ranking ---------- */
+.ranking { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+.ranking li {
+  display: grid; grid-template-columns: 2.2rem 48px 1fr auto; align-items: center; gap: 0.7rem;
+  padding: 0.55rem 0.8rem; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--borde);
+}
+.ranking li.yo { border-color: var(--amarillo); background: rgba(245, 255, 61, 0.08); box-shadow: 0 0 16px rgba(245, 255, 61, 0.3); }
+.ranking .pos { font-family: var(--fuente-mono); font-weight: 800; font-size: 1.2rem; color: var(--cian); text-align: center; }
+.ranking li:nth-child(1) .pos { color: var(--amarillo); }
+.ranking .nombre { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ranking .puntos { text-align: right; font-family: var(--fuente-mono); color: var(--amarillo); }
+.ranking .puntos small { display: block; color: var(--suave); }
+
+/* ---------- Pantallas de texto (intro, perfil, ranking, resultados) ---------- */
+.centrada {
+  min-height: 100vh; display: grid; align-content: center; gap: 1.2rem;
+  width: min(100%, var(--ancho-max)); margin: 0 auto; padding: 1.2rem;
+}
+.intro-titulo { font-size: clamp(2rem, 9vw, 3.6rem); font-weight: 900; text-align: center; }
+.intro-subtitulo { text-align: center; color: var(--suave); letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.8rem; }
+.intro-texto { min-height: 18rem; font-family: var(--fuente-mono); font-size: 1rem; line-height: 1.7; }
+.intro-texto p { margin-bottom: 0.9rem; }
+.intro-texto strong { color: var(--magenta); }
+.intro-texto em { color: var(--cian); }
+.cursor::after { content: '█'; margin-left: 2px; color: var(--cian); animation: parpadeo 1s steps(1) infinite; }
+.fila-botones { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+.avatares-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+.avatar-opcion {
+  display: grid; justify-items: center; gap: 0.3rem; padding: 0.5rem 0.2rem; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04); border: 2px solid transparent; font-size: 0.75rem;
+}
+.avatar-opcion[aria-checked="true"] { border-color: var(--amarillo); background: rgba(245, 255, 61, 0.1); box-shadow: 0 0 14px rgba(245, 255, 61, 0.4); }
+.avatar-opcion .avatar { width: 56px; height: 56px; }

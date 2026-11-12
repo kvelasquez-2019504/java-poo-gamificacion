@@ -1,0 +1,155 @@
+/* ==========================================================
+   game.css — pantalla de nivel y ejercicios
+   ========================================================== */
+.pantalla-nivel { width: min(100%, var(--ancho-max)); margin: 0 auto; padding: 0.7rem 0.7rem 6rem; display: grid; gap: 0.8rem; }
+
+.nivel-barra { display: flex; align-items: center; gap: 0.6rem; }
+.nivel-titulo { flex: 1; min-width: 0; }
+.nivel-titulo small { color: var(--acento); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.7rem; }
+.nivel-titulo h2 { font-size: 1.15rem; }
+.cronometro { font-family: var(--fuente-mono); font-size: 0.8rem; color: var(--suave); }
+.cronometro.tarde { color: var(--rojo); }
+
+.progreso-ejercicios { display: flex; gap: 0.4rem; }
+.progreso-ejercicios span { flex: 1; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.12); }
+.progreso-ejercicios span.hecho { background: var(--verde); box-shadow: 0 0 8px var(--verde); }
+.progreso-ejercicios span.actual { background: var(--acento); box-shadow: 0 0 8px var(--acento); }
+
+.historia { color: var(--suave); font-style: italic; font-size: 0.92rem; border-left: 3px solid var(--acento); padding-left: 0.7rem; }
+.enunciado { font-size: 1.08rem; font-weight: 700; }
+.enunciado .etiqueta { display: inline-block; margin-right: 0.4rem; padding: 0.05rem 0.5rem; border-radius: 99px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--violeta); color: #fff; vertical-align: middle; }
+
+/* ---------- Bloque de código con resaltado ---------- */
+.codigo {
+  font-family: var(--fuente-mono); font-size: 0.92rem; line-height: 1.75;
+  background: #07071a; border: 1px solid var(--violeta); border-radius: 12px;
+  padding: 0.7rem 0; overflow-x: auto; box-shadow: inset 0 0 22px rgba(122, 43, 255, 0.18);
+}
+.linea { display: flex; align-items: center; min-width: max-content; padding-right: 1rem; }
+.linea .num { flex: none; width: 2.6rem; padding-right: 0.8rem; text-align: right; color: #4d5185; user-select: none; }
+.linea .txt { white-space: pre; }
+.kw  { color: var(--magenta); font-weight: 700; }
+.tp  { color: var(--cian); }
+.st  { color: #8dff9c; }
+.cm  { color: #6f76a8; font-style: italic; }
+.an  { color: var(--amarillo); }
+.nm  { color: #ffb86b; }
+
+/* ---------- Completar código: huecos y banco ---------- */
+.slot {
+  display: inline-block; vertical-align: middle; min-width: 5.2ch; min-height: 1.75em; margin: 0 2px;
+  padding: 0 0.5em; border-radius: 8px; border: 2px dashed var(--amarillo); background: rgba(245, 255, 61, 0.08);
+  color: var(--amarillo); font: inherit; line-height: 1.5; text-align: center; touch-action: none;
+  box-shadow: 0 0 10px rgba(245, 255, 61, 0.3); transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+}
+.slot .vacio { opacity: 0.6; }
+.slot.lleno { border-style: solid; background: rgba(0, 240, 255, 0.14); color: #fff; border-color: var(--cian); cursor: grab; }
+.slot.cerca { transform: scale(1.12); background: rgba(245, 255, 61, 0.28); box-shadow: 0 0 22px var(--amarillo); }
+.slot.objetivo { animation: latido 0.9s ease infinite; } /* hay un fragmento seleccionado: indica dónde puede ir */
+.slot.ok  { border-color: var(--verde); background: rgba(57, 255, 136, 0.18); box-shadow: 0 0 14px var(--verde); color: #fff; }
+.slot.mal { border-color: var(--rojo); background: rgba(255, 59, 92, 0.2); box-shadow: 0 0 14px var(--rojo); color: #fff; animation: sacudida 0.45s ease; }
+
+.banco {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; min-height: 64px; padding: 0.8rem; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04); border: 1px dashed var(--borde);
+}
+.banco.cerca { border-color: var(--cian); background: rgba(0, 240, 255, 0.08); }
+.banco-titulo { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--suave); margin-bottom: -0.4rem; }
+.frag {
+  min-height: 46px; padding: 0.4rem 1rem; border-radius: 12px; border: 2px solid var(--cian);
+  background: linear-gradient(180deg, #123, #0a1a2a); font-family: var(--fuente-mono); font-weight: 700; color: #fff;
+  box-shadow: 0 4px 0 #064a55, 0 0 12px rgba(0, 240, 255, 0.35); touch-action: none; user-select: none; -webkit-user-select: none;
+  transition: transform 0.1s;
+}
+.frag:hover:not(:disabled) { transform: translateY(-2px); }
+.frag[aria-pressed="true"] { border-color: var(--amarillo); box-shadow: 0 4px 0 #6b6f10, 0 0 18px var(--amarillo); transform: translateY(-4px); }
+.frag.usado { opacity: 0.25; box-shadow: none; }
+.arrastrando { opacity: 0.35; }
+.rebote { animation: rebote 0.45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes rebote {
+  0% { transform: scale(0.6); } 55% { transform: scale(1.2); } 100% { transform: scale(1); }
+}
+/* Copia que sigue al puntero mientras se arrastra */
+.fantasma {
+  position: fixed; top: 0; left: 0; z-index: 200; pointer-events: none; margin: 0;
+  transform-origin: center; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.6)); opacity: 0.95;
+}
+.bloqueado .slot, .bloqueado .frag, .bloqueado .opcion, .bloqueado .orden-item { pointer-events: none; }
+
+/* ---------- Selección múltiple ---------- */
+.opciones { display: grid; gap: 0.7rem; }
+.opcion {
+  display: flex; align-items: flex-start; gap: 0.8rem; width: 100%; text-align: left; padding: 0.8rem 1rem;
+  border-radius: 14px; border: 2px solid var(--violeta); background: rgba(122, 43, 255, 0.1);
+  box-shadow: 0 4px 0 rgba(122, 43, 255, 0.5); transition: transform 0.1s, border-color 0.15s;
+}
+.opcion:hover { border-color: var(--cian); }
+.opcion .marca {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--cian);
+  display: grid; place-items: center; font-size: 0.85rem; color: transparent; margin-top: 1px;
+}
+.opcion.multi .marca { border-radius: 6px; }
+.opcion[aria-checked="true"] { border-color: var(--amarillo); background: rgba(245, 255, 61, 0.1); }
+.opcion[aria-checked="true"] .marca { background: var(--amarillo); color: #000; border-color: var(--amarillo); }
+.opcion.ok  { border-color: var(--verde); background: rgba(57, 255, 136, 0.15); }
+.opcion.mal { border-color: var(--rojo); background: rgba(255, 59, 92, 0.16); animation: sacudida 0.45s ease; }
+.opcion code { font-family: var(--fuente-mono); }
+
+/* ---------- Ordenar fragmentos ---------- */
+.orden-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.orden-item {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.5rem; border-radius: 10px;
+  background: #07071a; border: 2px solid var(--violeta); font-family: var(--fuente-mono); font-size: 0.9rem;
+  touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.orden-item .asa { color: var(--suave); flex: none; padding: 0 0.2rem; }
+.orden-item .txt { flex: 1; white-space: pre; overflow-x: auto; min-width: 0; }
+.orden-item .mover { display: flex; flex-direction: column; gap: 2px; flex: none; }
+.orden-item .mover button {
+  min-width: 34px; min-height: 22px; line-height: 1; padding: 0; border-radius: 6px; border: 1px solid var(--cian);
+  background: #0a1a2a; color: var(--cian); font-size: 0.75rem;
+}
+.orden-item.ok  { border-color: var(--verde); background: rgba(57, 255, 136, 0.1); }
+.orden-item.mal { border-color: var(--rojo); background: rgba(255, 59, 92, 0.12); animation: sacudida 0.45s ease; }
+
+/* ---------- Terminal de retroalimentación ---------- */
+.terminal {
+  min-height: 0; font-family: var(--fuente-mono); font-size: 0.88rem; line-height: 1.6;
+  background: #02020a; border: 1px solid var(--verde); border-radius: 12px; padding: 0; overflow: hidden;
+  max-height: 0; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s, padding 0.3s;
+}
+.terminal.visible { max-height: 60vh; opacity: 1; padding: 0.8rem 1rem; overflow: auto; box-shadow: 0 0 18px rgba(57, 255, 136, 0.25); }
+.terminal.error { border-color: var(--rojo); box-shadow: 0 0 18px rgba(255, 59, 92, 0.35); }
+.terminal .prompt { color: var(--verde); }
+.terminal.error .prompt { color: var(--rojo); }
+.terminal p { margin-bottom: 0.4rem; animation: subir 0.3s ease; }
+.terminal .pista { color: var(--amarillo); }
+.terminal .concepto { color: var(--cian); border-top: 1px dashed var(--borde); padding-top: 0.4rem; margin-top: 0.4rem; }
+.compilando::after { content: '...'; animation: puntos 1s steps(4) infinite; display: inline-block; width: 1.4em; overflow: hidden; vertical-align: bottom; }
+@keyframes puntos { from { width: 0; } to { width: 1.4em; } }
+
+/* ---------- Barra de acciones fija abajo ---------- */
+.acciones {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; display: flex; justify-content: center; gap: 0.8rem;
+  padding: 0.7rem 0.8rem calc(0.7rem + env(safe-area-inset-bottom)); background: rgba(8, 8, 20, 0.94);
+  border-top: 2px solid var(--acento); backdrop-filter: blur(6px);
+}
+.acciones .btn { min-width: min(100%, 280px); }
+
+/* ---------- Resultados ---------- */
+.resultados { text-align: center; }
+.resultados .estrellas-grandes { font-size: clamp(3rem, 16vw, 5rem); display: flex; justify-content: center; gap: 0.3rem; }
+.estrellas-grandes .estrella { transform: scale(0); opacity: 0; }
+.estrellas-grandes .estrella.aparece { animation: estrella-in 0.7s cubic-bezier(.2, 1.6, .4, 1) forwards; }
+@keyframes estrella-in { 0% { transform: scale(0) rotate(-120deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+.estrellas-grandes .estrella:not(.on) { transform: scale(1); opacity: 1; }
+.puntos-grandes { font-family: var(--fuente-mono); font-size: 2.6rem; font-weight: 900; }
+.desglose { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; text-align: left; font-family: var(--fuente-mono); }
+.desglose li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.3rem 0.2rem; border-bottom: 1px dashed var(--borde); }
+.desglose li span:last-child { color: var(--amarillo); }
+.desglose li.total { border-bottom: 0; border-top: 2px solid var(--acento); font-weight: 900; }
+.etiqueta-record { display: inline-block; padding: 0.15rem 0.8rem; border-radius: 99px; background: var(--amarillo); color: #000; font-weight: 900; animation: latido 1s ease infinite; }
+
+/* ---------- Código en línea dentro de textos ---------- */
+code { font-family: var(--fuente-mono); color: var(--cian); background: rgba(0, 240, 255, 0.08); padding: 0 0.25em; border-radius: 4px; }
+.meta { color: var(--suave); font-size: 0.85rem; }
